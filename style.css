@@ -1,0 +1,110 @@
+/* Hacker Agent Theme */
+body {
+    font-family: 'Courier New', monospace;
+    text-align: center;
+    margin: 0;
+    background-color: #0a0a0a; /* Dark background */
+    color: #00ff00; /* Neon green text */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Full viewport height */
+}
+
+/* Centered container */
+#container {
+    width: 600px;
+    background: rgba(0, 0, 0, 0.8); /* Semi-transparent black */
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 15px #00ff00; /* Green glowing effect */
+    border: 2px solid #00ff00;
+}
+
+/* Input and button styling */
+input, button {
+    padding: 10px;
+    font-size: 16px;
+    margin: 5px;
+    border-radius: 5px;
+    border: 1px solid #00ff00;
+    background: black;
+    color: #00ff00;
+    font-family: 'Courier New', monospace;
+}
+
+input {
+    width: 60%;
+}
+
+button {
+    cursor: pointer;
+    transition: 0.3s ease-in-out;
+}
+
+button:hover {
+    background: #00ff00;
+    color: black;
+    box-shadow: 0 0 10px #00ff00;
+}
+
+/* Map Styling */
+#map {
+    height: 400px;
+    width: 100%;
+    margin-top: 15px;
+    border-radius: 5px;
+    border: 2px solid #00ff00;
+    box-shadow: 0 0 15px #00ff00;
+}
+
+/* List Styling */
+ul {
+    list-style: none;
+    padding: 0;
+}
+
+li {
+    background: rgba(0, 255, 0, 0.2);
+    margin: 5px;
+    padding: 10px;
+    border-radius: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid #00ff00;
+}
+
+/* Red button for removing locations */
+.remove-btn {
+    background: black;
+    color: #ff0000;
+    border: 1px solid #ff0000;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 5px;
+    font-family: 'Courier New', monospace;
+}
+
+.remove-btn:hover {
+    background: #ff0000;
+    color: black;
+    box-shadow: 0 0 10px #ff0000;
+}
+
+.error {
+    color: red;
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+/* Glitch Effect */
+@keyframes glitch {
+    0% { text-shadow: 2px 2px #00ff00, -2px -2px #00ff00; }
+    50% { text-shadow: -2px -2px #00ff00, 2px 2px #00ff00; }
+    100% { text-shadow: 2px 2px #00ff00, -2px -2px #00ff00; }
+}
+
+h2 {
+    animation: glitch 0.2s infinite alternate;
+}

@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>I See You</title>
+    
+    <!-- Leaflet CSS & JS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link rel="stylesheet" href="style.css">
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+        #container {
+            display: flex;
+            width: 90%;
+            height: 80vh;
+        }
+        #locationsPanel {
+            width: 30%;
+            padding: 10px;
+            overflow-y: auto;
+            background: #f8f9fa;
+            border-right: 2px solid #ddd;
+            display: flex;
+            flex-direction: column;
+        }
+        #map {
+            width: 70%;
+            height: 100%;
+        }
+        .input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+        li {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 5px;
+            background: #fff;
+            margin-bottom: 5px;
+            border-radius: 5px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+        }
+        button {
+            cursor: pointer;
+        }
+        .location-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <div id="locationsPanel">
+            <h2>I See You</h2>
+            <div class="input-group">
+                <input type="text" id="locationInput" placeholder="Enter location">
+                <button id="addLocationButton">Add Location</button>
+            </div>
+            <ul id="locationsList"></ul>
+        </div>
+        <div id="map"></div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const locationInput = document.getElementById("locationInput");
+            const addLocationButton = document.getElementById("addLocationButton");
+            const locationsList = document.getElementById("locationsList");
+            
+            let locationsArray = [];
+            let map = L.map("map").setView([20, 0], 2);
+            let markersGroup = L.layerGroup().addTo(map);
+
+            L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+                attribution: "© OpenStreetMap contributors"
+            }).addTo(map);
+
+            addLocationButton.addEventListener("click", () => {
+                const location = locationInput.value.trim();
+                if (location === "") return;
+
+                locationsArray.push(location);
+                locationInput.value = "";
+                updateLocationsList();
+                geocodeLocation(location);
+            });
+
+            function updateLocationsList() {
+                locationsList.innerHTML = "";
+                locationsArray.forEach((location, index) => {
+                    const li = document.createElement("li");
+                    
+                    const locationSpan = document.createElement("span");
+                    locationSpan.textContent = location;
+                    
+                    const deleteButton = document.createElement("button");
+                    deleteButton.textContent = "Delete";
+                    deleteButton.onclick = () => deleteLocation(index);
+                    
+                    li.classList.add("location-item");
+                    li.appendChild(locationSpan);
+                    li.appendChild(deleteButton);
+                    locationsList.appendChild(li);
+                });
+            }
+
+            function deleteLocation(index) {
+                locationsArray.splice(index, 1);
+                updateLocationsList();
+                markersGroup.clearLayers(); // Clear markers when deleting a location
+            }
+
+            function geocodeLocation(location) {
+                fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(location)}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.length > 0) {
+                            addMarker(data[0].lat, data[0].lon, location);
+                        } else {
+                            alert("Location not found!");
+                        }
+                    })
+                    .catch(() => alert("Error fetching location data!"));
+            }
+
+            function addMarker(lat, lon, location) {
+                markersGroup.clearLayers();
+                L.marker([lat, lon]).addTo(markersGroup).bindPopup(location).openPopup();
+                map.setView([lat, lon], 10);
+            }
+        });
+    </script>
+</body>
+</html>
+
+/* Hacker Agent Theme */
+body {
+    font-family: 'Courier New', monospace;
+    text-align: center;
+    margin: 0;
+    background-color: #0a0a0a; /* Dark background */
+    color: #00ff00; /* Neon green text */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Full viewport height */
+}
+
+/* Centered container */
+#container {
+    width: 600px;
+    background: rgba(0, 0, 0, 0.8); /* Semi-transparent black */
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 15px #00ff00; /* Green glowing effect */
+    border: 2px solid #00ff00;
+}
+
+/* Input and button styling */
+input, button {
+    padding: 10px;
+    font-size: 16px;
+    margin: 5px;
+    border-radius: 5px;
+    border: 1px solid #00ff00;
+    background: black;
+    color: #00ff00;
+    font-family: 'Courier New', monospace;
+}
+
+input {
+    width: 60%;
+}
+
+button {
+    cursor: pointer;
+    transition: 0.3s ease-in-out;
+}
+
+button:hover {
+    background: #00ff00;
+    color: black;
+    box-shadow: 0 0 10px #00ff00;
+}
+
+/* Map Styling */
+#map {
+    height: 400px;
+    width: 100%;
+    margin-top: 15px;
+    border-radius: 5px;
+    border: 2px solid #00ff00;
+    box-shadow: 0 0 15px #00ff00;
+}
+
+/* List Styling */
+ul {
+    list-style: none;
+    padding: 0;
+}
+
+li {
+    background: rgba(0, 255, 0, 0.2);
+    margin: 5px;
+    padding: 10px;
+    border-radius: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid #00ff00;
+}
+
+/* Red button for removing locations */
+.remove-btn {
+    background: black;
+    color: #ff0000;
+    border: 1px solid #ff0000;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 5px;
+    font-family: 'Courier New', monospace;
+}
+
+.remove-btn:hover {
+    background: #ff0000;
+    color: black;
+    box-shadow: 0 0 10px #ff0000;
+}
+
+.error {
+    color: red;
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+/* Glitch Effect */
+@keyframes glitch {
+    0% { text-shadow: 2px 2px #00ff00, -2px -2px #00ff00; }
+    50% { text-shadow: -2px -2px #00ff00, 2px 2px #00ff00; }
+    100% { text-shadow: 2px 2px #00ff00, -2px -2px #00ff00; }
+}
+
+h2 {
+    animation: glitch 0.2s infinite alternate;
+}
